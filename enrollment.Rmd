@@ -1,0 +1,34 @@
+---
+title: "Enrollment"
+author: "Karen Jiang"
+date: "2/13/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(readxl)
+library(tidyverse)
+library(janitor)
+library(reprex)
+library(gt)
+```
+
+
+```{r}
+data <- read_excel("class_enrollment_summary_by_term_2.13.20.xlsx", 
+                   skip = 3, 
+                   col_names = TRUE) %>%
+  clean_names() %>%
+  filter(! is.na(course_name))
+
+data <- data %>% filter(course_department == "Government") %>%
+  arrange(desc(total)) %>%
+  slice(1:5) %>% 
+  select(course_title, course_name, instructor_full_name, total) %>%
+  gt() %>%
+    tab_header(title = "Top Five Government Classes")
+```
+
+
